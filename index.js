@@ -4,11 +4,13 @@ const { Prisma } = require("prisma-binding");
 const Query = require("./src/resolvers/Query");
 const Mutation = require("./src/resolvers/Mutation");
 const AuthPayload = require("./src/resolvers/AuthPayload");
+const Subscription = require("./src/resolvers/Subscription");
 
 const resolvers = {
   Query,
   Mutation,
-  AuthPayload
+  AuthPayload,
+  Subscription
 };
 
 const server = new GraphQLServer({
