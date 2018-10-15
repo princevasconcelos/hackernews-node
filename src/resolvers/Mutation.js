@@ -42,7 +42,7 @@ async function login(root, args, context, info) {
   };
 }
 
-function post(parent, args, context, info) {
+function post(root, args, context, info) {
   const userId = getUserId(context);
   return context.db.mutation.createLink(
     {
@@ -56,8 +56,31 @@ function post(parent, args, context, info) {
   );
 }
 
+async function vote(root, args, context, info) {
+  const userId = getUserId(context);
+
+  const linkExists = await context.db.exists.Vote({
+    user: { id: userId },
+    link: { id: args.linkId }
+  });
+  if (linkExists) {
+    throw new Error(`Already voted for link: ${args.linkId}`);
+  }
+
+  return context.db.mutation.createVote(
+    {
+      data: {
+        user: { connect: { id: userId } },
+        link: { connect: { id: args.linkId } }
+      }
+    },
+    info
+  );
+}
+
 module.exports = {
   signup,
   login,
-  post
+  post,
+  vote
 };
